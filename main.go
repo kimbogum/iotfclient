@@ -2,14 +2,13 @@ package main
 
 import (
 	"fmt"
-//import the Paho Go MQTT library
+	//import the Paho Go MQTT library
+	"encoding/json"
 	MQTT "git.eclipse.org/gitroot/paho/org.eclipse.paho.mqtt.golang.git"
 	"github.com/jimlawless/cfg"
+	"log"
 	"os"
 	"time"
-	"log"
-	"encoding/json"
-	"cmd/api/testdata/src/pkg/p1"
 )
 
 //define a function for the default message handler
@@ -17,8 +16,6 @@ var f MQTT.MessageHandler = func(client *MQTT.Client, msg MQTT.Message) {
 	fmt.Printf("TOPIC: %s\n", msg.Topic())
 	fmt.Printf("MSG: %s\n", msg.Payload())
 }
-
-
 
 func main() {
 	//load the configuration
@@ -68,24 +65,23 @@ func main() {
 }
 
 func createMessage() []byte {
-	message:= Message
-	jsn,err := json.Marshal(message)
+	message := D{MyName: "piem", Cputemp: 37.0, Cpuload: 2.0, Sine: 0.9}
+	jsn, err := json.Marshal(message)
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(jsn)
 	return jsn
 }
 
 type Message struct {
-	_id string
+	_id  string
 	_rev string
-	d D
+	d    D
 }
 
 type D struct {
-	myName string
-	cputemp float32
-	cpuload float32
-	sine float32
+	MyName  string  `json:"myName"`
+	Cputemp float32 `json:"cputemp"`
+	Cpuload float32 `json:"cpuload"`
+	Sine    float32 `json:"sine"`
 }
